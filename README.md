@@ -26,10 +26,11 @@ Buka http://localhost:3000 — anda akan dibawa ke halaman log masuk. Masukkan s
 ```
 app/
   layout.tsx          # Root layout + skrip init tema
+  page.tsx            # Root "/" — redirect ke /dashboard
   login/page.tsx      # Halaman log masuk
   (portal)/
     layout.tsx        # Shell portal: guard auth, sidebar, topbar
-    page.tsx          # Dashboard
+    dashboard/        # Dashboard utama
     checklist/        # Senarai semak penuh
     armada/           # Armada dron
     laporan/          # Ringkasan & cetak/PDF

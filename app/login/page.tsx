@@ -13,7 +13,7 @@ export default function LoginPage() {
 	const [err, setErr] = useState<string | null>(null)
 
 	useEffect(() => {
-		if (getSession()) router.replace("/")
+		if (getSession()) router.replace("/dashboard")
 	}, [router])
 
 	const submit = (e: React.FormEvent) => {
@@ -27,7 +27,7 @@ export default function LoginPage() {
 			return
 		}
 		login(email, name)
-		router.replace("/")
+		router.replace("/dashboard")
 	}
 
 	return (
