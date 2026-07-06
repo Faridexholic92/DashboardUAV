@@ -38,8 +38,9 @@ Gunakan templat asal (sheet `Checklist UAV`) atau mana-mana fail `.xlsx` /
 
 ## Nota
 
-- Data lalai dalam `lib/data.ts` ialah **data demo** (status/tarikh contoh)
-  supaya carta kelihatan hidup. Import fail sebenar untuk menggantikannya.
+- Data lalai dalam `lib/data.ts` diambil **terus dari templat asal tanpa
+  ubahan** — semua status kosong (Belum Mula). Import fail yang telah diisi
+  untuk melihat kemajuan sebenar.
 - Styling guna vanilla CSS (`app/globals.css`) dengan design tokens — tiada
   Tailwind diperlukan, mudah untuk ubah tema.
 - `xlsx` (SheetJS) dimuat secara dynamic import hanya bila import Excel dibuat.

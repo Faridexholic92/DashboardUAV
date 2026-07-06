@@ -14,7 +14,7 @@ import { STATUS_COLORS, STATUS_ORDER, type Task } from "@/lib/types"
 
 export default function Page() {
 	const [tasks, setTasks] = useState<Task[]>(DEFAULT_TASKS)
-	const [source, setSource] = useState("Data demo — templat asal")
+	const [source, setSource] = useState("Templat asal — belum dikemas kini")
 	const [error, setError] = useState<string | null>(null)
 
 	const stats = useMemo(() => computeStats(tasks), [tasks])
