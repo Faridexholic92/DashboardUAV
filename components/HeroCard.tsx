@@ -1,4 +1,7 @@
+"use client"
+
 import type { Stats } from "@/lib/stats"
+import { HERO_IMG } from "@/lib/fleet"
 
 export default function HeroCard({ stats }: { stats: Stats }) {
 	return (
@@ -53,6 +56,16 @@ export default function HeroCard({ stats }: { stats: Stats }) {
 					<rect x="261" y="36" width="6" height="6" rx="1.6" />
 				</g>
 			</svg>
+
+			{/* Foto dron DJI (Wikimedia Commons, CC) */}
+			<img
+				className="hero-drone"
+				src={HERO_IMG}
+				alt="Dron DJI Mavic Air 2 sedang terbang"
+				onError={(e) => {
+					e.currentTarget.style.display = "none"
+				}}
+			/>
 
 			<div className="eyebrow">
 				<span className="live-dot" aria-hidden="true" />

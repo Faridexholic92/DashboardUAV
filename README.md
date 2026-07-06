@@ -36,6 +36,12 @@ Gunakan templat asal (sheet `Checklist UAV`) atau mana-mana fail `.xlsx` /
 | Status | `Selesai`, `Dalam Tindakan`, `Belum Mula`, `Tertangguh` (sinonim biasa dikesan; kosong = Belum Mula) |
 | Tarikh Mula / Tarikh Siap / Tempoh Masa / Pegawai / Catatan | Pilihan |
 
+## Imej dron
+
+- Foto hero dan section **Armada UAV** guna foto dron DJI dari Wikimedia Commons (lesen Creative Commons) yang dihotlink terus.
+- Untuk guna foto sendiri: letak fail imej dalam folder `public/` (cth. `public/dron-saya.jpg`) dan tukar nilai `img` / `HERO_IMG` dalam `lib/fleet.ts` kepada `/dron-saya.jpg`.
+- Senarai armada (nama, peranan, gambar) boleh diedit dalam `lib/fleet.ts`.
+
 ## Nota
 
 - Data lalai dalam `lib/data.ts` diambil **terus dari templat asal tanpa

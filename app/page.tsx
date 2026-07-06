@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react"
 import HeroCard from "@/components/HeroCard"
 import ImportButton from "@/components/ImportButton"
+import FleetCard from "@/components/FleetCard"
 import InsightsCard from "@/components/InsightsCard"
 import KpiTile from "@/components/KpiTile"
 import PhaseChart from "@/components/PhaseChart"
@@ -205,6 +206,8 @@ export default function Page() {
 
 				<InsightsCard insights={insights} />
 
+				<FleetCard />
+
 				<section className="glass card span-12" aria-label="Senarai semak">
 					<h2 className="card-title">Senarai Semak UAV</h2>
 					<p className="card-hint">
@@ -224,7 +227,8 @@ export default function Page() {
 			</main>
 
 			<footer className="foot">
-				Sumber data: {source} · Import fail Excel/CSV berformat
+				Imej dron: Wikimedia Commons (lesen Creative Commons) · Sumber
+				data: {source} · Import fail Excel/CSV berformat
 				Template_Profesional_Pemprosesan_UAV untuk kemas kini penuh
 			</footer>
 		</div>
