@@ -678,6 +678,224 @@ td.muted {
 	text-align: center;
 }
 
+/* ---------- Smart UX: butang ghost ---------- */
+.btn-ghost {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--muted);
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: 10px;
+	padding: 10px 14px;
+	min-height: 44px;
+	cursor: pointer;
+	transition: background 0.15s ease, color 0.15s ease;
+}
+
+.btn-ghost:hover {
+	background: var(--surface-2);
+	color: var(--text);
+}
+
+/* ---------- Smart UX: pipeline stepper ---------- */
+.stepper {
+	display: flex;
+	overflow-x: auto;
+	padding: 2px 0;
+}
+
+.step {
+	flex: 1;
+	min-width: 104px;
+	position: relative;
+	text-align: center;
+	padding: 6px 8px 8px;
+	background: none;
+	border: 0;
+	color: var(--text);
+	cursor: pointer;
+	font: inherit;
+	border-radius: 10px;
+}
+
+.step:hover {
+	background: rgba(255, 255, 255, 0.04);
+}
+
+.step.selected {
+	background: rgba(94, 159, 232, 0.1);
+	outline: 1px solid rgba(94, 159, 232, 0.35);
+}
+
+.step + .step::before {
+	content: "";
+	position: absolute;
+	top: 19px;
+	left: calc(-50% + 26px);
+	width: calc(100% - 52px);
+	height: 2px;
+	background: rgba(255, 255, 255, 0.12);
+}
+
+.step.line-done::before {
+	background: var(--green);
+}
+
+.step-dot {
+	width: 28px;
+	height: 28px;
+	border-radius: 999px;
+	margin: 0 auto 8px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 12px;
+	font-weight: 700;
+	border: 2px solid rgba(255, 255, 255, 0.18);
+	color: var(--muted);
+	background: rgba(255, 255, 255, 0.04);
+	position: relative;
+	z-index: 1;
+}
+
+.step.done .step-dot {
+	background: rgba(114, 188, 143, 0.15);
+	border-color: var(--green);
+	color: var(--green);
+}
+
+.step.active .step-dot {
+	background: rgba(94, 159, 232, 0.18);
+	border-color: var(--blue);
+	color: #fff;
+	box-shadow: 0 0 0 4px rgba(94, 159, 232, 0.15);
+}
+
+.step-label {
+	display: block;
+	font-size: 12.5px;
+	font-weight: 600;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.step.pending .step-label {
+	color: var(--muted);
+	font-weight: 500;
+}
+
+.step-count {
+	display: block;
+	font-size: 11px;
+	color: var(--faint);
+	margin-top: 2px;
+	font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Smart UX: insight ---------- */
+.insight-group {
+	margin-top: 16px;
+}
+
+.insight-title {
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--faint);
+	margin-bottom: 4px;
+}
+
+.insight-item {
+	display: flex;
+	gap: 10px;
+	align-items: flex-start;
+	padding: 7px 0;
+	font-size: 14px;
+}
+
+/* ---------- Smart UX: cross-filter ---------- */
+.phase-row.clickable {
+	cursor: pointer;
+	border: 0;
+	background: none;
+	color: inherit;
+	font: inherit;
+	text-align: left;
+	border-radius: 8px;
+	padding: 6px 8px;
+	margin: 0 -8px;
+	width: calc(100% + 16px);
+}
+
+.phase-row.clickable:hover {
+	background: rgba(255, 255, 255, 0.04);
+}
+
+.phase-row.selected {
+	background: rgba(94, 159, 232, 0.12);
+}
+
+.legend-btn {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	color: var(--muted);
+	background: none;
+	border: 0;
+	font: inherit;
+	font-size: 13px;
+	padding: 5px 8px;
+	margin: 0 -8px;
+	border-radius: 8px;
+	cursor: pointer;
+	text-align: left;
+	width: calc(100% + 16px);
+}
+
+.legend-btn:hover {
+	background: rgba(255, 255, 255, 0.05);
+}
+
+.legend-btn.selected {
+	background: rgba(94, 159, 232, 0.12);
+	color: var(--text);
+}
+
+.legend-btn b {
+	margin-left: auto;
+	color: var(--text);
+	font-weight: 600;
+	font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Smart UX: pill boleh edit ---------- */
+.pill-select {
+	display: inline-block;
+	appearance: none;
+	-webkit-appearance: none;
+	border: 0;
+	cursor: pointer;
+	font: inherit;
+	font-size: 12.5px;
+	font-weight: 600;
+	line-height: 1.5;
+}
+
+.pill-select:hover {
+	filter: brightness(1.2);
+}
+
+.pill-select option {
+	background: #131b30;
+	color: var(--text);
+	font-weight: 500;
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 980px) {
 	.span-3 { grid-column: span 6; }

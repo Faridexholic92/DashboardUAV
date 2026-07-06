@@ -1,29 +1,90 @@
 "use client"
 
-import { useMemo, useState } from "react"
-import ActivityFeed from "@/components/ActivityFeed"
+import { useEffect, useMemo, useState } from "react"
 import HeroCard from "@/components/HeroCard"
 import ImportButton from "@/components/ImportButton"
+import InsightsCard from "@/components/InsightsCard"
 import KpiTile from "@/components/KpiTile"
 import PhaseChart from "@/components/PhaseChart"
+import PipelineStepper from "@/components/PipelineStepper"
 import StatusDonut from "@/components/StatusDonut"
 import TaskTable from "@/components/TaskTable"
 import { DEFAULT_TASKS } from "@/lib/data"
+import { exportCsv } from "@/lib/exportCsv"
+import { computeInsights } from "@/lib/insights"
 import { computeStats } from "@/lib/stats"
-import { STATUS_COLORS, STATUS_ORDER, type Task } from "@/lib/types"
+import { clearState, loadState, saveState } from "@/lib/storage"
+import {
+	FASA_ORDER,
+	STATUS_COLORS,
+	STATUS_ORDER,
+	type Status,
+	type Task,
+} from "@/lib/types"
+
+const SOURCE_DEFAULT = "Templat asal — belum dikemas kini"
 
 export default function Page() {
 	const [tasks, setTasks] = useState<Task[]>(DEFAULT_TASKS)
-	const [source, setSource] = useState("Templat asal — belum dikemas kini")
+	const [source, setSource] = useState(SOURCE_DEFAULT)
 	const [error, setError] = useState<string | null>(null)
+	const [hydrated, setHydrated] = useState(false)
+	const [fasaFilter, setFasaFilter] = useState("Semua")
+	const [statusFilter, setStatusFilter] = useState("Semua")
+
+	// Pulihkan sesi terakhir (import + edit status) dari localStorage
+	useEffect(() => {
+		const saved = loadState()
+		if (saved) {
+			setTasks(saved.tasks)
+			setSource(saved.source)
+		}
+		setHydrated(true)
+	}, [])
+
+	// Auto-save setiap perubahan
+	useEffect(() => {
+		if (hydrated) saveState({ tasks, source })
+	}, [tasks, source, hydrated])
 
 	const stats = useMemo(() => computeStats(tasks), [tasks])
+	const insights = useMemo(() => computeInsights(tasks), [tasks])
+
+	const handleImport = (imported: Task[], fileName: string) => {
+		setTasks(imported)
+		setSource(fileName)
+		setError(null)
+		setFasaFilter("Semua")
+		setStatusFilter("Semua")
+	}
+
+	const handleReset = () => {
+		setTasks(DEFAULT_TASKS)
+		setSource(SOURCE_DEFAULT)
+		setError(null)
+		setFasaFilter("Semua")
+		setStatusFilter("Semua")
+		clearState()
+	}
+
+	const handleTaskStatus = (id: string, status: Status) => {
+		setTasks((prev) =>
+			prev.map((t) => (t.id === id ? { ...t, status } : t)),
+		)
+		if (source === SOURCE_DEFAULT) setSource("Diedit dalam dashboard")
+	}
+
+	const toggleFasa = (fasa: string) =>
+		setFasaFilter((prev) => (prev === fasa ? "Semua" : fasa))
+
+	const toggleStatus = (status: string) =>
+		setStatusFilter((prev) => (prev === status ? "Semua" : status))
 
 	return (
 		<div className="shell">
 			<header className="topbar">
 				<div className="brand">
-					<div className="brand-mark" aria-hidden="true">
+					<div className="brand-mark">
 						<svg
 							width="22"
 							height="22"
@@ -47,47 +108,73 @@ export default function Page() {
 					</div>
 				</div>
 				<div className="topbar-actions">
-					{error ? <span className="import-error" role="alert">{error}</span> : null}
-					<span className="badge-src" title={source}>
+					<span className="badge-src" title="Sumber data semasa">
 						{source}
 					</span>
-					<ImportButton
-						onImport={(t, name) => {
-							setTasks(t)
-							setSource(name)
-							setError(null)
-						}}
-						onError={setError}
-					/>
+					<button
+						type="button"
+						className="btn-ghost"
+						onClick={() => exportCsv(tasks)}
+						title="Muat turun checklist semasa sebagai CSV"
+					>
+						Export CSV
+					</button>
+					<button
+						type="button"
+						className="btn-ghost"
+						onClick={handleReset}
+						title="Kembali ke templat asal"
+					>
+						Reset
+					</button>
+					<ImportButton onImport={handleImport} onError={setError} />
 				</div>
 			</header>
+
+			{error && (
+				<div className="alert" role="alert">
+					{error}
+				</div>
+			)}
 
 			<main className="grid">
 				<HeroCard stats={stats} />
 
-				<section className="glass card donut-card span-4" aria-label="Status tugasan">
+				<section
+					className="glass card donut-card span-4"
+					aria-label="Status tugasan"
+				>
 					<h2 className="card-title">Status Tugasan</h2>
-					<p className="card-hint">Pecahan {stats.total} tugasan</p>
+					<p className="card-hint">
+						Pecahan {stats.total} tugasan — klik untuk tapis
+					</p>
 					<StatusDonut
 						segments={STATUS_ORDER.map((s) => ({
 							label: s,
 							value: stats.byStatus[s],
 							color: STATUS_COLORS[s],
 						}))}
-						centerValue={`${stats.pct}%`}
-						centerLabel="selesai"
+						pct={stats.pct}
+						selected={statusFilter}
+						onSelect={toggleStatus}
 					/>
 				</section>
+
+				<PipelineStepper
+					byFasa={stats.byFasa}
+					selected={fasaFilter}
+					onSelect={toggleFasa}
+				/>
 
 				<KpiTile
 					label="Jumlah Tugasan"
 					value={stats.total}
-					sub={`${stats.byFasa.length} fasa kerja`}
+					sub={`${FASA_ORDER.length} fasa kerja`}
 					color="var(--blue)"
 				/>
 				<KpiTile
 					label="Selesai"
-					value={stats.byStatus.Selesai}
+					value={stats.byStatus["Selesai"]}
 					sub={`${stats.pct}% daripada jumlah`}
 					color="var(--green)"
 				/>
@@ -99,29 +186,40 @@ export default function Page() {
 				/>
 				<KpiTile
 					label="Tertangguh"
-					value={stats.byStatus.Tertangguh}
+					value={stats.byStatus["Tertangguh"]}
 					sub="Perlu perhatian"
 					color="var(--orange)"
 				/>
 
-				<section className="glass card span-7" aria-label="Kemajuan mengikut fasa">
+				<section className="glass card span-7" aria-label="Kemajuan fasa">
 					<h2 className="card-title">Kemajuan Mengikut Fasa</h2>
-					<p className="card-hint">Tugasan selesai / jumlah bagi setiap fasa</p>
-					<PhaseChart byFasa={stats.byFasa} />
+					<p className="card-hint">
+						Tugasan selesai / jumlah — klik fasa untuk tapis jadual
+					</p>
+					<PhaseChart
+						byFasa={stats.byFasa}
+						selected={fasaFilter}
+						onSelect={toggleFasa}
+					/>
 				</section>
 
-				<section className="glass card span-5" aria-label="Aktiviti terkini">
-					<h2 className="card-title">Aktiviti Terkini</h2>
-					<p className="card-hint">Tugasan yang aktif atau baru selesai</p>
-					<ActivityFeed tasks={tasks} />
-				</section>
+				<InsightsCard insights={insights} />
 
 				<section className="glass card span-12" aria-label="Senarai semak">
 					<h2 className="card-title">Senarai Semak UAV</h2>
 					<p className="card-hint">
-						Tapis mengikut fasa, status, atau cari aktiviti
+						Klik pill status untuk kemas kini terus — perubahan disimpan
+						automatik
 					</p>
-					<TaskTable tasks={tasks} fasaNames={stats.byFasa.map((f) => f.fasa)} />
+					<TaskTable
+						tasks={tasks}
+						fasaNames={FASA_ORDER.slice()}
+						fasa={fasaFilter}
+						status={statusFilter}
+						onFasaChange={setFasaFilter}
+						onStatusChange={setStatusFilter}
+						onTaskStatusChange={handleTaskStatus}
+					/>
 				</section>
 			</main>
 

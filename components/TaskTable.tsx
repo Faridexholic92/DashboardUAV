@@ -13,12 +13,20 @@ const PILL_CLASS: Record<Status, string> = {
 export default function TaskTable({
 	tasks,
 	fasaNames,
+	fasa,
+	status,
+	onFasaChange,
+	onStatusChange,
+	onTaskStatusChange,
 }: {
 	tasks: Task[]
 	fasaNames: string[]
+	fasa: string
+	status: string
+	onFasaChange: (fasa: string) => void
+	onStatusChange: (status: string) => void
+	onTaskStatusChange: (id: string, status: Status) => void
 }) {
-	const [fasa, setFasa] = useState("Semua")
-	const [status, setStatus] = useState("Semua")
 	const [q, setQ] = useState("")
 
 	const rows = useMemo(() => {
@@ -28,8 +36,7 @@ export default function TaskTable({
 			if (status !== "Semua" && t.status !== status) return false
 			if (
 				needle &&
-				![t.aktiviti, t.pegawai ?? "", t.catatan ?? "", t.bil]
-					.join(" ")
+				!`${t.aktiviti} ${t.pegawai ?? ""} ${t.catatan ?? ""}`
 					.toLowerCase()
 					.includes(needle)
 			)
@@ -41,13 +48,13 @@ export default function TaskTable({
 	return (
 		<>
 			<div className="filters">
-				<div className="chips" role="tablist" aria-label="Tapis mengikut fasa">
+				<div className="chips" role="tablist" aria-label="Tapis fasa">
 					{["Semua", ...fasaNames].map((f) => (
 						<button
-							key={f}
 							type="button"
-							className={f === fasa ? "chip active" : "chip"}
-							onClick={() => setFasa(f)}
+							key={f}
+							className={"chip" + (fasa === f ? " active" : "")}
+							onClick={() => onFasaChange(f)}
 						>
 							{f}
 						</button>
@@ -57,12 +64,13 @@ export default function TaskTable({
 					<select
 						className="select"
 						value={status}
-						onChange={(e) => setStatus(e.target.value)}
-						aria-label="Tapis mengikut status"
+						onChange={(e) => onStatusChange(e.target.value)}
+						aria-label="Tapis status"
 					>
-						<option>Semua</option>
-						{STATUS_ORDER.map((s) => (
-							<option key={s}>{s}</option>
+						{["Semua", ...STATUS_ORDER].map((s) => (
+							<option key={s} value={s}>
+								{s}
+							</option>
 						))}
 					</select>
 					<input
@@ -71,7 +79,7 @@ export default function TaskTable({
 						placeholder="Cari aktiviti / pegawai…"
 						value={q}
 						onChange={(e) => setQ(e.target.value)}
-						aria-label="Cari tugasan"
+						aria-label="Cari aktiviti"
 					/>
 				</div>
 			</div>
@@ -89,33 +97,46 @@ export default function TaskTable({
 						</tr>
 					</thead>
 					<tbody>
-						{rows.length === 0 ? (
-							<tr>
-								<td colSpan={6}>
-									<div className="empty">Tiada tugasan sepadan dengan tapisan.</div>
+						{rows.map((t) => (
+							<tr key={t.id}>
+								<td className="num">{t.bil || "\u2013"}</td>
+								<td className={t.sub ? "sub-akt" : undefined}>
+									{t.sub ? `\u21b3 ${t.aktiviti}` : t.aktiviti}
+								</td>
+								<td>
+									<span className="fasa-chip">{t.fasa}</span>
+								</td>
+								<td>
+									<select
+										className={"pill-select " + PILL_CLASS[t.status]}
+										value={t.status}
+										onChange={(e) =>
+											onTaskStatusChange(t.id, e.target.value as Status)
+										}
+										aria-label={`Status untuk ${t.aktiviti}`}
+										title="Klik untuk tukar status"
+									>
+										{STATUS_ORDER.map((s) => (
+											<option key={s} value={s}>
+												{s}
+											</option>
+										))}
+									</select>
+								</td>
+								<td className={t.tarikhSiap ? undefined : "muted"}>
+									{t.tarikhSiap ?? "\u2014"}
+								</td>
+								<td className={t.pegawai ? undefined : "muted"}>
+									{t.pegawai ?? "\u2014"}
 								</td>
 							</tr>
-						) : (
-							rows.map((t) => (
-								<tr key={t.id}>
-									<td className="num">{t.bil || "–"}</td>
-									<td className={t.sub ? "sub-akt" : undefined}>
-										{t.sub ? "↳ " : ""}
-										{t.aktiviti}
-									</td>
-									<td>
-										<span className="fasa-chip">{t.fasa}</span>
-									</td>
-									<td>
-										<span className={PILL_CLASS[t.status]}>
-											<span className="pd" />
-											{t.status}
-										</span>
-									</td>
-									<td className="muted">{t.tarikhSiap || "—"}</td>
-									<td className="muted">{t.pegawai || "—"}</td>
-								</tr>
-							))
+						))}
+						{rows.length === 0 && (
+							<tr>
+								<td colSpan={6} className="empty">
+									Tiada tugasan sepadan dengan tapisan.
+								</td>
+							</tr>
 						)}
 					</tbody>
 				</table>
