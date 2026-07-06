@@ -51,10 +51,27 @@ select {
 	outline-offset: 2px;
 }
 
+/* Grid GPS halus — tema dron */
+body::after {
+	content: "";
+	position: fixed;
+	inset: 0;
+	background-image:
+		linear-gradient(rgba(94, 159, 232, 0.05) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(94, 159, 232, 0.05) 1px, transparent 1px);
+	background-size: 44px 44px;
+	-webkit-mask-image: radial-gradient(1000px 640px at 72% -5%, #000, transparent 72%);
+	mask-image: radial-gradient(1000px 640px at 72% -5%, #000, transparent 72%);
+	pointer-events: none;
+	z-index: 0;
+}
+
 .shell {
 	max-width: 1180px;
 	margin: 0 auto;
 	padding: 24px 24px 48px;
+	position: relative;
+	z-index: 1;
 }
 
 /* ---------- Topbar ---------- */
@@ -678,6 +695,59 @@ td.muted {
 	text-align: center;
 }
 
+/* ---------- Tema dron ---------- */
+.hero-rings {
+	right: -10px;
+	top: -8px;
+	opacity: 0.9;
+}
+
+.live-dot {
+	display: inline-block;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--green);
+	margin-right: 9px;
+	vertical-align: 1px;
+	animation: ping 2.4s ease-out infinite;
+}
+
+@keyframes ping {
+	0% {
+		box-shadow: 0 0 0 0 rgba(114, 188, 143, 0.45);
+	}
+	70% {
+		box-shadow: 0 0 0 9px rgba(114, 188, 143, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 0 rgba(114, 188, 143, 0);
+	}
+}
+
+.donut::after {
+	content: "";
+	position: absolute;
+	inset: 8px;
+	border-radius: 50%;
+	background: conic-gradient(
+		from 0deg,
+		transparent 0deg 300deg,
+		rgba(94, 159, 232, 0.4) 352deg,
+		transparent 360deg
+	);
+	-webkit-mask-image: radial-gradient(closest-side, transparent 77%, #000 79% 99%, transparent 100%);
+	mask-image: radial-gradient(closest-side, transparent 77%, #000 79% 99%, transparent 100%);
+	animation: radar-sweep 5.5s linear infinite;
+	pointer-events: none;
+}
+
+@keyframes radar-sweep {
+	to {
+		transform: rotate(360deg);
+	}
+}
+
 /* ---------- Smart UX: butang ghost ---------- */
 .btn-ghost {
 	display: inline-flex;
@@ -737,11 +807,19 @@ td.muted {
 	left: calc(-50% + 26px);
 	width: calc(100% - 52px);
 	height: 2px;
-	background: rgba(255, 255, 255, 0.12);
+	background: repeating-linear-gradient(
+		90deg,
+		rgba(255, 255, 255, 0.2) 0 6px,
+		transparent 6px 12px
+	);
 }
 
 .step.line-done::before {
-	background: var(--green);
+	background: repeating-linear-gradient(
+		90deg,
+		rgba(114, 188, 143, 0.75) 0 6px,
+		transparent 6px 12px
+	);
 }
 
 .step-dot {
@@ -917,5 +995,12 @@ td.muted {
 @media (prefers-reduced-motion: reduce) {
 	* {
 		transition: none !important;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.live-dot,
+	.donut::after {
+		animation: none;
 	}
 }
