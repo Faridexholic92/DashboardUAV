@@ -1,52 +1,48 @@
-# UAV Ops Console — Dashboard Kemajuan UAV
+# UAV Ops Portal
 
-Dashboard analitik (Next.js 14 App Router + TypeScript) untuk memantau
-checklist pemprosesan data UAV berdasarkan
-`Template_Profesional_Pemprosesan_UAV.xlsx`.
+Portal operasi UAV untuk pemprosesan data fotogrametri — dibina dengan Next.js 14 (App Router) dan CSS vanila.
 
 ## Ciri-ciri
 
-- **Bento analytics UI** — tema dark navy, aurora mesh gradient + kad kaca (glassmorphism)
-- **Hero card** — peratus kemajuan keseluruhan, fasa aktif, tugasan tertangguh
-- **KPI tiles** — jumlah tugasan, selesai, dalam tindakan, tertangguh
-- **Donut status** + **carta bar mengikut fasa** (SVG/CSS tulen, tiada lib carta)
-- **Feed aktiviti** — tugasan aktif / baru selesai
-- **Jadual senarai semak** — tapis fasa (chips), status, dan carian teks
-- **Import Excel/CSV client-side** — klik atau drag & drop; data diproses
-  sepenuhnya dalam browser (tiada upload ke server)
+- **Portal berbilang halaman** — Dashboard, Checklist, Armada, Laporan, Tetapan dengan sidebar navigasi.
+- **Log masuk (mod demo)** — sesi disimpan dalam localStorage pelayar sahaja; tiada data dihantar ke server. Untuk produksi, gantikan dengan NextAuth.js / Auth.js atau SSO agensi.
+- **Mod gelap & cerah** — togol pada topbar atau melalui Tetapan; pilihan kekal selepas muat semula (tanpa kelipan tema).
+- **Data sebenar templat** — 36 tugasan, 8 fasa kerja daripada Template_Profesional_Pemprosesan_UAV. Tiada data olok-olok.
+- **Import Excel/CSV** — muat naik fail berformat templat untuk kemas kini penuh; Export CSV disokong.
+- **Kemas kini status terus** — klik pill status dalam jadual; perubahan disimpan automatik dalam pelayar.
+- **Tema dron** — hero laluan penerbangan, grid GPS, stepper fasa bergaris putus, imbasan radar pada donut.
 
 ## Mula
 
 ```bash
 npm install
 npm run dev
-# buka http://localhost:3000
 ```
 
-## Format import
+Buka http://localhost:3000 — anda akan dibawa ke halaman log masuk. Masukkan sebarang emel sah + kata laluan (minimum 4 aksara).
 
-Gunakan templat asal (sheet `Checklist UAV`) atau mana-mana fail `.xlsx` /
-`.csv` dengan lajur berikut (header dikesan secara automatik):
+## Struktur
 
-| Lajur | Nota |
-| --- | --- |
-| Bil | Kosong = sub-item aktiviti di atasnya |
-| Fasa | Diwarisi dari baris sebelumnya jika kosong |
-| Aktiviti | Wajib — baris tanpa aktiviti diabaikan |
-| Status | `Selesai`, `Dalam Tindakan`, `Belum Mula`, `Tertangguh` (sinonim biasa dikesan; kosong = Belum Mula) |
-| Tarikh Mula / Tarikh Siap / Tempoh Masa / Pegawai / Catatan | Pilihan |
+```
+app/
+  layout.tsx          # Root layout + skrip init tema
+  login/page.tsx      # Halaman log masuk
+  (portal)/
+    layout.tsx        # Shell portal: guard auth, sidebar, topbar
+    page.tsx          # Dashboard
+    checklist/        # Senarai semak penuh
+    armada/           # Armada dron
+    laporan/          # Ringkasan & cetak/PDF
+    tetapan/          # Tema, profil, data
+hooks/useTasks.ts     # Keadaan tugasan dikongsi (localStorage)
+lib/                  # auth, theme, data, stats, insights, import/export
+components/           # UI: Sidebar, ThemeToggle, HeroCard, TaskTable, dll.
+```
 
 ## Imej dron
 
-- Foto hero dan section **Armada UAV** guna foto dron DJI dari Wikimedia Commons (lesen Creative Commons) yang dihotlink terus.
-- Untuk guna foto sendiri: letak fail imej dalam folder `public/` (cth. `public/dron-saya.jpg`) dan tukar nilai `img` / `HERO_IMG` dalam `lib/fleet.ts` kepada `/dron-saya.jpg`.
-- Senarai armada (nama, peranan, gambar) boleh diedit dalam `lib/fleet.ts`.
+Imej lalai ialah foto dron DJI daripada Wikimedia Commons (lesen Creative Commons). Untuk guna foto sendiri: letak fail dalam `public/` dan tukar nilai `img` dalam `lib/fleet.ts`.
 
-## Nota
+## Deploy
 
-- Data lalai dalam `lib/data.ts` diambil **terus dari templat asal tanpa
-  ubahan** — semua status kosong (Belum Mula). Import fail yang telah diisi
-  untuk melihat kemajuan sebenar.
-- Styling guna vanilla CSS (`app/globals.css`) dengan design tokens — tiada
-  Tailwind diperlukan, mudah untuk ubah tema.
-- `xlsx` (SheetJS) dimuat secara dynamic import hanya bila import Excel dibuat.
+Push ke GitHub, kemudian import repo di Vercel — tiada konfigurasi tambahan diperlukan.

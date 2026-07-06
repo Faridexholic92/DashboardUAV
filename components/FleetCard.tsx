@@ -1,6 +1,7 @@
 "use client"
 
 import { FLEET } from "@/lib/fleet"
+import SafeImg from "@/components/SafeImg"
 
 export default function FleetCard() {
 	return (
@@ -12,15 +13,7 @@ export default function FleetCard() {
 			<div className="fleet-grid">
 				{FLEET.map((d) => (
 					<figure className="fleet-tile" key={d.name}>
-						<img
-							className="fleet-img"
-							src={d.img}
-							alt={d.alt}
-							loading="lazy"
-							onError={(e) => {
-								e.currentTarget.style.display = "none"
-							}}
-						/>
+						<SafeImg className="fleet-img" src={d.img} alt={d.alt} />
 						<figcaption className="fleet-meta">
 							<div className="fleet-name">{d.name}</div>
 							<div className="fleet-role">{d.role}</div>

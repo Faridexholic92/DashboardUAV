@@ -15,23 +15,23 @@ export const FLEET: FleetItem[] = [
 	{
 		name: "DJI Mavic 3",
 		role: "Fotogrametri utama",
-		img: "https://commons.wikimedia.org/wiki/Special:FilePath/DJI%20Mavic%203.jpg?width=900",
+		img: "https://commons.wikimedia.org/wiki/Special:FilePath/DJI%20Mavic%203.jpg?width=1280",
 		alt: "Dron DJI Mavic 3 sedang terbang",
 	},
 	{
 		name: "DJI Mavic Air 2",
 		role: "Peninjauan & dokumentasi",
-		img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/DJI_-_Drohne_Mavic_Air_2.JPG/1100px-DJI_-_Drohne_Mavic_Air_2.JPG",
+		img: "https://commons.wikimedia.org/wiki/Special:FilePath/DJI%20-%20Drohne%20Mavic%20Air%202.JPG?width=1100",
 		alt: "Dron DJI Mavic Air 2 sedang terbang",
 	},
 	{
 		name: "DJI Phantom 4",
 		role: "Pemetaan kawasan",
-		img: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/DJI_Phantom_4_Drone_%2832285759641%29.jpg/960px-DJI_Phantom_4_Drone_%2832285759641%29.jpg",
+		img: "https://commons.wikimedia.org/wiki/Special:FilePath/DJI%20Phantom%204%20Drone%20(32285759641).jpg?width=960",
 		alt: "Dron DJI Phantom 4",
 	},
 ]
 
 /** Foto hero — Mavic Air 2 di udara (Wikimedia Commons, CC BY-SA). */
 export const HERO_IMG =
-	"https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/DJI_-_Drohne_Mavic_Air_2.JPG/1100px-DJI_-_Drohne_Mavic_Air_2.JPG"
+	"https://commons.wikimedia.org/wiki/Special:FilePath/DJI%20-%20Drohne%20Mavic%20Air%202.JPG?width=1100"

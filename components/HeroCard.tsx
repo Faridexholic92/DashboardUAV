@@ -2,6 +2,7 @@
 
 import type { Stats } from "@/lib/stats"
 import { HERO_IMG } from "@/lib/fleet"
+import SafeImg from "@/components/SafeImg"
 
 export default function HeroCard({ stats }: { stats: Stats }) {
 	return (
@@ -58,13 +59,10 @@ export default function HeroCard({ stats }: { stats: Stats }) {
 			</svg>
 
 			{/* Foto dron DJI (Wikimedia Commons, CC) */}
-			<img
+			<SafeImg
 				className="hero-drone"
 				src={HERO_IMG}
 				alt="Dron DJI Mavic Air 2 sedang terbang"
-				onError={(e) => {
-					e.currentTarget.style.display = "none"
-				}}
 			/>
 
 			<div className="eyebrow">
