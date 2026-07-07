@@ -1,7 +1,7 @@
 "use client"
 
 import PortalShell from "@/components/PortalShell"
-import DataToolbar from "@/components/DataToolbar"
+import ImportButton from "@/components/ImportButton"
 import PipelineStepper from "@/components/PipelineStepper"
 import TaskTable from "@/components/TaskTable"
 import { useTasks } from "@/hooks/useTasks"
@@ -19,13 +19,12 @@ export default function ChecklistPage() {
 						Senarai semak penuh — 36 tugasan merentas 8 fasa kerja
 					</p>
 				</div>
-				<DataToolbar
-					tasks={t.tasks}
-					source={t.source}
-					onImport={t.handleImport}
-					onReset={t.handleReset}
-					onError={t.setError}
-				/>
+				<div className="toolbar">
+					<ImportButton
+						onImport={t.handleImport}
+						onError={t.setError}
+					/>
+				</div>
 			</div>
 
 			{t.error && (

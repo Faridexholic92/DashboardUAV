@@ -1,7 +1,7 @@
 "use client"
 
 import PortalShell from "@/components/PortalShell"
-import DataToolbar from "@/components/DataToolbar"
+import ImportButton from "@/components/ImportButton"
 import HeroCard from "@/components/HeroCard"
 import InsightsCard from "@/components/InsightsCard"
 import KpiTile from "@/components/KpiTile"
@@ -28,13 +28,12 @@ export default function DashboardPage() {
 						Ringkasan kemajuan operasi UAV semasa
 					</p>
 				</div>
-				<DataToolbar
-					tasks={t.tasks}
-					source={t.source}
-					onImport={t.handleImport}
-					onReset={t.handleReset}
-					onError={t.setError}
-				/>
+				<div className="toolbar">
+					<ImportButton
+						onImport={t.handleImport}
+						onError={t.setError}
+					/>
+				</div>
 			</div>
 
 			{t.error && (
