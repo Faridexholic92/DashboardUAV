@@ -28,13 +28,15 @@ app/
   layout.tsx          # Root layout + skrip init tema
   page.tsx            # Root "/" — redirect ke /dashboard
   login/page.tsx      # Halaman log masuk
-  (portal)/
-    layout.tsx        # Shell portal: guard auth, sidebar, topbar
-    dashboard/        # Dashboard utama
-    checklist/        # Senarai semak penuh
-    armada/           # Armada dron
-    laporan/          # Ringkasan & cetak/PDF
-    tetapan/          # Tema, profil, data
+  dashboard/          # Dashboard utama
+  checklist/          # Senarai semak penuh
+  armada/             # Armada dron
+  laporan/            # Ringkasan & cetak/PDF
+  tetapan/            # Tema, profil, data
+components/PortalShell.tsx  # Shell portal: guard auth, sidebar, topbar
+
+Nota: route group (portal) sengaja tidak digunakan kerana ia mencetuskan
+bug "page_client-reference-manifest.js" semasa build di Vercel (Next.js 14).
 hooks/useTasks.ts     # Keadaan tugasan dikongsi (localStorage)
 lib/                  # auth, theme, data, stats, insights, import/export
 components/           # UI: Sidebar, ThemeToggle, HeroCard, TaskTable, dll.
